@@ -6,7 +6,9 @@ import math
 pygame.init()
 
 #criando a janela
-janela = pygame.display.set_mode((700, 500))
+X = 700
+Y = 500
+janela = pygame.display.set_mode((X, Y))
 
 #Background
 background = pygame.image.load("fundoespaco.jpg")
@@ -28,28 +30,28 @@ num_enemies = 6
 
 for i in range(num_enemies):
     enemyImg.append(pygame.image.load("002-aircraft.png"))
-    enemyX.append(random.randint(0, 636))
-    enemyY.append(random.randint(0, 150))
-    enemyX_change.append(0.2)
-    enemyY_change.append(20)
+    enemyX.append(random.randint(0, X - 64))
+    enemyY.append(random.randint(0, int(Y/5)))
+    enemyX_change.append(3)
+    enemyY_change.append(Y/15)
 
     def enemy(x, y):
         janela.blit(enemyImg[i], (x, y))
 
 #Player
 playerImg = pygame.image.load("001-spaceship.png")
-playerX = 320
+playerX = X/2 - 32
 playerX_change = 0
-playerY = 400
+playerY = Y - 100
 
 def player(x, y):
     janela.blit(playerImg, (x, y))
 
 #Bullet
 bulletImg = pygame.image.load("bullet32.png")
-bulletY = 368
+bulletY = playerY
 bulletX = 0
-bulletY_change = -0.5
+bulletY_change = -7
 bullet_sound = pygame.mixer.Sound('laser.wav')
 bullet_state = "ready"
 #Ready - No bullet in the screen
@@ -86,12 +88,17 @@ wasted_font = pygame.font.Font('freesansbold.ttf', 50)
 def game_over_text():
     janela.fill((0, 0, 0))
     message = wasted_font.render("GAME OVER", True, (255, 0, 0))
-    janela.blit(message, (200, 200))
-    show_score(290, 260)
+    janela.blit(message, (X/3.5, Y/2.5))
+    show_score(X/2.4, Y/2)
+
+#configurando velocidade
+clock = pygame.time.Clock()
 
 #Game loop
 running = True
 while running:
+
+    clock.tick(60)
 
     janela.blit(background, (0, 0))
 
@@ -102,9 +109,9 @@ while running:
         if event.type ==pygame.KEYDOWN: #Checando se alguma tecla foi pressionada
             #Checando qual tecla foi pressionada
             if event.key == pygame.K_LEFT:
-                playerX_change -= 0.3
+                playerX_change -= 5
             if event.key == pygame.K_RIGHT:
-                playerX_change += 0.3
+                playerX_change += 5
             if event.key == pygame.K_SPACE and bullet_state == "ready":
                 bulletX = playerX
                 bullet_sound.play()
@@ -118,8 +125,8 @@ while running:
     #Colocando limites ao movimento
     if playerX < 0:
         playerX = 0
-    elif playerX > 636:
-        playerX = 636
+    elif playerX > X-64:
+        playerX = X-64
 
     playerX += playerX_change
     player(playerX, playerY) #Colocando o player na tela
@@ -131,9 +138,9 @@ while running:
             enemyY[i] += enemyY_change[i]
 
         #Game over conditions
-        if enemyY[i] > 320:
+        if enemyY[i] > playerY:
             for j in range(num_enemies):
-                enemyY[j] = 2000
+                enemyY[j] = Y*2
             game_over_text()
             break
     
@@ -141,13 +148,13 @@ while running:
         enemy(enemyX[i], enemyY[i])
 
             #Efetividade das colisões
-        if Colisao(enemyX[i], enemyY[i], bulletX, bulletY) == True:
-            bulletY = 368
+        if Colisao(enemyX[i], enemyY[i], bulletX, bulletY):
+            bulletY = playerY
             bullet_state = "ready"
             explosion_sound.play()
             score_value += 1
-            enemyX[i] = random.randint(0, 636)
-            enemyY[i] = random.randint(0, 150)
+            enemyX[i] = random.randint(0, X-64)
+            enemyY[i] = random.randint(0, int(Y/5))
     
         show_score(textX, textY)
 
@@ -158,10 +165,7 @@ while running:
 
     if bulletY <= 0:
         bullet_state = "ready"
-        bulletY = 368
-
-
-
-
+        bulletY = playerY
 
     pygame.display.update() #Atualizando a janela
+    
