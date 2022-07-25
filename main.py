@@ -138,7 +138,7 @@ while running:
             enemyY[i] += enemyY_change[i]
 
         #Game over conditions
-        if enemyY[i] > playerY:
+        if enemyY[i] > playerY - 64:
             for j in range(num_enemies):
                 enemyY[j] = Y*2
             game_over_text()
