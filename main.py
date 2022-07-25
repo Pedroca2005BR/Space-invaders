@@ -51,7 +51,7 @@ def player(x, y):
 bulletImg = pygame.image.load("bullet32.png")
 bulletY = playerY
 bulletX = 0
-bulletY_change = -7
+bulletY_change = Y/(-60)
 bullet_sound = pygame.mixer.Sound('laser.wav')
 bullet_state = "ready"
 #Ready - No bullet in the screen
