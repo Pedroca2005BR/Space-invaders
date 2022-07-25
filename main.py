@@ -149,7 +149,7 @@ while running:
             enemyX[i] = random.randint(0, 636)
             enemyY[i] = random.randint(0, 150)
     
-    show_score(textX, textY)
+        show_score(textX, textY)
 
     #Movimento das balas
     if bullet_state == "fire":
