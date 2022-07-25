@@ -126,11 +126,8 @@ while running:
 
     #Controlando movimento dos inimigos
     for i in range(num_enemies):
-        if enemyX[i] <= 1:
-            enemyX_change[i] = 0.2
-            enemyY[i] += enemyY_change[i]
-        elif enemyX[i] >= 635:
-            enemyX_change[i] = -0.2
+        if enemyX[i] <= 1 or enemyX[i] >= X-64:
+            enemyX_change[i] *= -1
             enemyY[i] += enemyY_change[i]
 
         #Game over conditions
