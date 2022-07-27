@@ -96,6 +96,8 @@ def show_score(x, y):
 over_font = pygame.font.Font('freesansbold.ttf', 50)
 
 def game_over_text():
+    global over_condition
+    over_condition = True
     janela.fill((0, 0, 0))
     message = over_font.render("GAME OVER", True, (255, 0, 0))
     janela.blit(message, (X/3.5, Y/2.5))
@@ -135,8 +137,9 @@ while gaming:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             gaming = False
-        
-        if event.type ==pygame.KEYDOWN: #Checando se alguma tecla foi pressionada
+            
+        #Checando se alguma tecla foi pressionada
+        if event.type ==pygame.KEYDOWN and not over_condition: 
             #Checando qual tecla foi pressionada
             if event.key == pygame.K_LEFT:
                 playerX_change -= 5
