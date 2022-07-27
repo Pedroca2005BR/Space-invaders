@@ -20,6 +20,17 @@ pygame.display.set_caption("Space Invaders - Pedro's version")
 icon = pygame.image.load("nave.png")
 pygame.display.set_icon(icon)
 
+#Menu inicial
+font_basica = pygame.font.Font('freesansbold.ttf', 32)
+Start = font_basica.render("Start", True, (0, 0, 255), (255, 255, 255))
+
+def Menu(x, y):
+    if event.type == pygame.MOUSEBUTTONDOWN:
+        if event.button == 1:
+            if x >= 200 and x <= 250:
+                if y >= 100 and y <= 132:
+                    return "Start"
+
 #Enemy
 enemyImg = []
 enemyX = []
@@ -74,37 +85,56 @@ explosion_sound = pygame.mixer.Sound("explosion.wav")
 
 #Score
 score_value = 0
-font = pygame.font.Font('freesansbold.ttf', 32)
 textX = 10
 textY = 10
 
 def show_score(x, y):
-    score = font.render("Score : " + str(score_value), True, (255, 255, 255))
+    score = font_basica.render("Score : " + str(score_value), True, (255, 255, 255))
     janela.blit(score, (x, y))
 
 #Game over message
-wasted_font = pygame.font.Font('freesansbold.ttf', 50)
+over_font = pygame.font.Font('freesansbold.ttf', 50)
 
 def game_over_text():
     janela.fill((0, 0, 0))
-    message = wasted_font.render("GAME OVER", True, (255, 0, 0))
+    message = over_font.render("GAME OVER", True, (255, 0, 0))
     janela.blit(message, (X/3.5, Y/2.5))
     show_score(X/2.4, Y/2)
 
 #configurando velocidade
 clock = pygame.time.Clock()
 
-#Game loop
+#Game loop----------------------------------------------------------------------------------------------------------
+gaming = False
 running = True
 while running:
 
     clock.tick(60)
 
-    janela.blit(background, (0, 0))
+    mouse = pygame.mouse.get_pos()
+
+    janela.blit(Start, (200, 100))
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        
+        if Menu(mouse[0], mouse[1]) == "Start":
+            gaming = True
+            running = False
+
+over_condition = False
+while gaming:
+
+    clock.tick(60)
+
+    mouse = pygame.mouse.get_pos()
+
+    janela.blit(background, (0, 0))
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            gaming = False
         
         if event.type ==pygame.KEYDOWN: #Checando se alguma tecla foi pressionada
             #Checando qual tecla foi pressionada
