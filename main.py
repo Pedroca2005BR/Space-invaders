@@ -22,13 +22,20 @@ pygame.display.set_icon(icon)
 
 #Menu inicial
 font_basica = pygame.font.Font('freesansbold.ttf', 32)
-Start = font_basica.render("Start", True, (0, 0, 255), (255, 255, 255))
+Start = font_basica.render("Start", True, (0, 0, 0), (255, 255, 255))
+Options = font_basica.render("Options", True, (0, 0, 0), (255, 255, 255))
+Exit = font_basica.render("Exit", True, (0, 0, 0), (255, 255, 255))
 
 def Menu(x, y):
+    global running
+    janela.blit(Start, (X/2.2, Y/3))
+    janela.blit(Options, (X/2.2 - 32, Y/2))
+    janela.blit(Exit, (X/2.2 - 32, int(Y/1.5)))
     if event.type == pygame.MOUSEBUTTONDOWN:
         if event.button == 1:
-            if x >= 200 and x <= 250:
-                if y >= 100 and y <= 132:
+            if x >= (X/2.2) and x <= (X/1.8):
+                if y >= Y/3 and y <= Y/3 + 32:
+                    running = False
                     return "Start"
 
 #Enemy
@@ -114,8 +121,8 @@ while running:
     clock.tick(60)
 
     mouse = pygame.mouse.get_pos()
+    print(mouse)
 
-    janela.blit(Start, (200, 100))
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -123,7 +130,9 @@ while running:
         
         if Menu(mouse[0], mouse[1]) == "Start":
             gaming = True
-            running = False
+        elif Menu(mouse[0], mouse[1]) == "Exit":
+            break
+    pygame.display.update()
 
 over_condition = False
 while gaming:
@@ -137,7 +146,7 @@ while gaming:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             gaming = False
-            
+
         #Checando se alguma tecla foi pressionada
         if event.type ==pygame.KEYDOWN and not over_condition: 
             #Checando qual tecla foi pressionada
