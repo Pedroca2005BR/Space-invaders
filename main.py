@@ -28,15 +28,20 @@ Exit = font_basica.render("Exit", True, (0, 0, 0), (255, 255, 255))
 
 def Menu(x, y):
     global running
-    janela.blit(Start, (X/2.2, Y/3))
-    janela.blit(Options, (X/2.2 - 32, Y/2))
-    janela.blit(Exit, (X/2.2 - 32, int(Y/1.5)))
+    global Game_state
+    janela.blit(Start, (X/2 - 37, Y/1.5))
+    janela.blit(Options, (X/5 - 64, Y/1.5))
+    janela.blit(Exit, (X/1.3 - 32, int(Y/1.5)))
     if event.type == pygame.MOUSEBUTTONDOWN:
         if event.button == 1:
-            if x >= (X/2.2) and x <= (X/1.8):
-                if y >= Y/3 and y <= Y/3 + 32:
+            if y >= Y/1.5 and y <= Y/1.5 + 32:
+                if x >= (X/2 - 37) and x <= (X/2 + 37):
+                    Game_state = "Game"
+                if x >= (X/5 - 64) and x <= (X/5 + 64):
+                    Game_state = "Menu"
+                if x >= (X/1.3 - 32) and x <= (X/1.3 + 32):
                     running = False
-                    return "Start"
+                
 
 #Enemy
 enemyImg = []
