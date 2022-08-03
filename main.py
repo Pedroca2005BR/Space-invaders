@@ -143,24 +143,23 @@ while running:
 
             janela.blit(background, (0, 0))
 
-            for event in pygame.event.get():
 
-                #Checando se alguma tecla foi pressionada
-                if event.type ==pygame.KEYDOWN and not over_condition: 
-                    #Checando qual tecla foi pressionada
-                    if event.key == pygame.K_LEFT:
-                        playerX_change -= 5
-                    if event.key == pygame.K_RIGHT:
-                        playerX_change += 5
-                    if event.key == pygame.K_SPACE and bullet_state == "ready":
-                        bulletX = playerX
-                        bullet_sound.play()
-                        fireBullet(bulletX, bulletY)
+            #Checando se alguma tecla foi pressionada
+            if event.type ==pygame.KEYDOWN and not over_condition: 
+                #Checando qual tecla foi pressionada
+                if event.key == pygame.K_LEFT:
+                    playerX_change -= 5
+                if event.key == pygame.K_RIGHT:
+                    playerX_change += 5
+                if event.key == pygame.K_SPACE and bullet_state == "ready":
+                    bulletX = playerX
+                    bullet_sound.play()
+                    fireBullet(bulletX, bulletY)
                 
 
-                if event.type == pygame.KEYUP: #Checando se a tecla foi solta (deixou de ser pressionada)
-                    if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-                        playerX_change = 0
+            if event.type == pygame.KEYUP: #Checando se a tecla foi solta (deixou de ser pressionada)
+                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                    playerX_change = 0
 
             #Colocando limites ao movimento
             if playerX < 0:
@@ -196,7 +195,8 @@ while running:
                     enemyX[i] = random.randint(0, X-64)
                     enemyY[i] = random.randint(0, int(Y/5))
     
-            show_score(textX, textY)
+            if not over_condition:
+                show_score(textX, textY)
 
             #Movimento das balas
             if bullet_state == "fire":
