@@ -118,9 +118,12 @@ def game_over_text():
 #configurando velocidade
 clock = pygame.time.Clock()
 
-#Game loop----------------------------------------------------------------------------------------------------------
-gaming = False
+#Variaveis de estado
+Game_state = "Main"
 running = True
+over_condition = False
+
+#Game loop----------------------------------------------------------------------------------------------------------
 while running:
 
     clock.tick(60)
@@ -132,87 +135,77 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        
-        if Menu(mouse[0], mouse[1]) == "Start":
-            gaming = True
-        elif Menu(mouse[0], mouse[1]) == "Exit":
-            break
-    pygame.display.update()
 
-over_condition = False
-while gaming:
+        if Game_state == "Main":
+            Menu(mouse[0], mouse[1])
 
-    clock.tick(60)
+        if Game_state == "Game":
 
-    mouse = pygame.mouse.get_pos()
+            janela.blit(background, (0, 0))
 
-    janela.blit(background, (0, 0))
+            for event in pygame.event.get():
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            gaming = False
-
-        #Checando se alguma tecla foi pressionada
-        if event.type ==pygame.KEYDOWN and not over_condition: 
-            #Checando qual tecla foi pressionada
-            if event.key == pygame.K_LEFT:
-                playerX_change -= 5
-            if event.key == pygame.K_RIGHT:
-                playerX_change += 5
-            if event.key == pygame.K_SPACE and bullet_state == "ready":
-                bulletX = playerX
-                bullet_sound.play()
-                fireBullet(bulletX, bulletY)
+                #Checando se alguma tecla foi pressionada
+                if event.type ==pygame.KEYDOWN and not over_condition: 
+                    #Checando qual tecla foi pressionada
+                    if event.key == pygame.K_LEFT:
+                        playerX_change -= 5
+                    if event.key == pygame.K_RIGHT:
+                        playerX_change += 5
+                    if event.key == pygame.K_SPACE and bullet_state == "ready":
+                        bulletX = playerX
+                        bullet_sound.play()
+                        fireBullet(bulletX, bulletY)
                 
 
-        if event.type == pygame.KEYUP: #Checando se a tecla foi solta (deixou de ser pressionada)
-            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-                playerX_change = 0
+                if event.type == pygame.KEYUP: #Checando se a tecla foi solta (deixou de ser pressionada)
+                    if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                        playerX_change = 0
 
-    #Colocando limites ao movimento
-    if playerX < 0:
-        playerX = 0
-    elif playerX > X-64:
-        playerX = X-64
+            #Colocando limites ao movimento
+            if playerX < 0:
+                playerX = 0
+            elif playerX > X-64:
+                playerX = X-64
 
-    playerX += playerX_change
-    player(playerX, playerY) #Colocando o player na tela
+            playerX += playerX_change
+            player(playerX, playerY) #Colocando o player na tela
 
-    #Controlando movimento dos inimigos
-    for i in range(num_enemies):
-        if enemyX[i] <= 1 or enemyX[i] >= X-64:
-            enemyX_change[i] *= -1
-            enemyY[i] += enemyY_change[i]
+            #Controlando movimento dos inimigos
+            for i in range(num_enemies):
+                if enemyX[i] <= 1 or enemyX[i] >= X-64:
+                    enemyX_change[i] *= -1
+                    enemyY[i] += enemyY_change[i]
 
-        #Game over conditions
-        if enemyY[i] > playerY - 64:
-            for j in range(num_enemies):
-                enemyY[j] = Y*2
-            game_over_text()
-            break
+                #Game over conditions
+                if enemyY[i] > playerY - 64:
+                    for j in range(num_enemies):
+                        enemyY[j] = Y*2
+                    game_over_text()
+                    break
     
-        enemyX[i] += enemyX_change[i]  
-        enemy(enemyX[i], enemyY[i])
+                enemyX[i] += enemyX_change[i]  
+                enemy(enemyX[i], enemyY[i])
 
-            #Efetividade das colisões
-        if Colisao(enemyX[i], enemyY[i], bulletX, bulletY):
-            bulletY = playerY
-            bullet_state = "ready"
-            explosion_sound.play()
-            score_value += 1
-            enemyX[i] = random.randint(0, X-64)
-            enemyY[i] = random.randint(0, int(Y/5))
+                #Efetividade das colisões
+                if Colisao(enemyX[i], enemyY[i], bulletX, bulletY):
+                    bulletY = playerY
+                    bullet_state = "ready"
+                    explosion_sound.play()
+                    score_value += 1
+                    enemyX[i] = random.randint(0, X-64)
+                    enemyY[i] = random.randint(0, int(Y/5))
     
-        show_score(textX, textY)
+            show_score(textX, textY)
 
-    #Movimento das balas
-    if bullet_state == "fire":
-        fireBullet(bulletX, bulletY)
-        bulletY += bulletY_change
+            #Movimento das balas
+            if bullet_state == "fire":
+                fireBullet(bulletX, bulletY)
+                bulletY += bulletY_change
 
-    if bulletY <= 0:
-        bullet_state = "ready"
-        bulletY = playerY
+            if bulletY <= 0:
+                bullet_state = "ready"
+                bulletY = playerY
 
     pygame.display.update() #Atualizando a janela
     
